@@ -26,7 +26,13 @@
 *.a
 *.lib
 
+# Modules
+*.pcm
+
 # Executables
 *.exe
 *.out
 *.app
+
+# Backup files
+*~
