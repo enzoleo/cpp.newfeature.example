@@ -6,7 +6,7 @@
 CXX := clang++
 PROJECT := dct
 
-CXXFLAGS := -Wall -std=c++2a -O2 -g -fPIC
+CXXFLAGS := -Wall -std=c++2a -O2 -g -fPIC -fmodules-ts
 BUILD_DIR := build
 
 # The build directory is hidden.
@@ -42,7 +42,7 @@ DCT_PCM_DIRS := $(dir $(DCT_PCMS))
 EXAMPLE_SRCS := $(wildcard $(EXAMPLE_SRC_DIR)/*.cpp)
 EXAMPLE_EXECS := $(addprefix $(BUILD_DIR)/, ${EXAMPLE_SRCS:.cpp=})
 
-.PHONY: all libdct example
+.PHONY: all dctmodules libdct example
 
 all: libdct example
 
@@ -52,10 +52,12 @@ $(PCM_DIR):
 $(LIB_DIR):
 	@ mkdir -p $@
 
-libdct: $(PCM_DIR) $(LIB_DIR) $(DCT_PCMS)
+libdct: dctmodules $(LIB_DIR)
+
+dctmodules: $(PCM_DIR) $(DCT_PCMS)
 
 $(PCM_DIR)/%.pcm:%.cppm
-	$(CXX) $< -c -o $@ $(CXXFLAGS) -fmodules-ts --precompile
+	$(CXX) $< -c -o $@ $(CXXFLAGS) --precompile
 
 example: $(EXAMPLE_DIR) $(EXAMPLE_EXECS)
 
@@ -63,7 +65,7 @@ $(EXAMPLE_DIR):
 	@ mkdir -p $@
 
 $(EXAMPLE_DIR)/%: $(EXAMPLE_SRC_DIR)/%.cpp
-	$(CXX) $^ -o $@ $(CXXFLAGS) -fmodules-ts -fprebuilt-module-path=$(DCT_PCM_DIRS)
+	$(CXX) $^ -o $@ $(CXXFLAGS) -fprebuilt-module-path=$(DCT_PCM_DIRS)
 
 clean:
 	@rm -rf $(BUILD_DIR)
