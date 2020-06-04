@@ -10,7 +10,7 @@ int main() {
   std::vector<double> res(v.size(), 0);
   
   // Run naive dct on the original vector and save the result into @res.
-  dct::naive_dct(v.begin(), v.end(), res.begin());
+  dct::naive_dct(v.data(), res.data(), v.size());
 
   // Output result vector @res.
   for (auto elem : res) std::cout << elem << ' ';

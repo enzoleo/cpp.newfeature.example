@@ -6,7 +6,7 @@
 CXX := clang++
 PROJECT := dct
 
-CXXFLAGS := -Wall -std=c++2a -O2 -g -fPIC -fmodules-ts
+CXXFLAGS := -Wall -std=c++2a -O2 -g -fPIC
 BUILD_DIR := build
 
 # The build directory is hidden.
@@ -55,7 +55,7 @@ $(LIB_DIR):
 libdct: $(PCM_DIR) $(LIB_DIR) $(DCT_PCMS)
 
 $(PCM_DIR)/%.pcm:%.cppm
-	$(CXX) $< -c -o $@ $(CXXFLAGS) --precompile
+	$(CXX) $< -c -o $@ $(CXXFLAGS) -fmodules-ts --precompile
 
 example: $(EXAMPLE_DIR) $(EXAMPLE_EXECS)
 
@@ -63,7 +63,7 @@ $(EXAMPLE_DIR):
 	@ mkdir -p $@
 
 $(EXAMPLE_DIR)/%: $(EXAMPLE_SRC_DIR)/%.cpp
-	$(CXX) $^ -o $@ $(CXXFLAGS) -fprebuilt-module-path=$(DCT_PCM_DIRS)
+	$(CXX) $^ -o $@ $(CXXFLAGS) -fmodules-ts -fprebuilt-module-path=$(DCT_PCM_DIRS)
 
 clean:
 	@rm -rf $(BUILD_DIR)
